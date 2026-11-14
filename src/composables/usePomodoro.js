@@ -61,9 +61,12 @@ export function usePomodoro() {
   const modeId = ref(MODE_IDS.includes(persisted.modeId) ? persisted.modeId : 'work')
   const status = ref('idle') // 'idle' | 'running' | 'paused'
   const remainingMs = ref(durationMs(settings, modeId.value))
+  // Absolute timestamp of the moment the running session ends. Persisting a
+  // deadline (rather than a countdown) lets a reload pick up exactly where the
+  // clock is, including time spent on another page.
+  const endsAt = ref(0)
   const announcement = ref('')
 
-  let deadline = 0
   let ticker = null
 
   const mode = computed(() => getMode(modeId.value))
@@ -92,8 +95,14 @@ export function usePomodoro() {
     }
   }
 
-  function finishSession() {
+  function startTicker() {
     stopTicker()
+    ticker = window.setInterval(tick, TICK_INTERVAL_MS)
+  }
+
+  function finishSession({ notify = true } = {}) {
+    stopTicker()
+    endsAt.value = 0
     const finished = mode.value
     status.value = 'idle'
 
@@ -108,7 +117,7 @@ export function usePomodoro() {
           : 'short'
         : 'work'
 
-    if (settings.soundEnabled) {
+    if (notify && settings.soundEnabled) {
       playSessionEndChime()
     }
 
@@ -121,7 +130,7 @@ export function usePomodoro() {
   }
 
   function tick() {
-    const remaining = deadline - Date.now()
+    const remaining = endsAt.value - Date.now()
     if (remaining <= 0) {
       remainingMs.value = 0
       finishSession()
@@ -136,16 +145,16 @@ export function usePomodoro() {
       remainingMs.value = totalMs.value
     }
     unlockAudio()
-    deadline = Date.now() + remainingMs.value
+    endsAt.value = Date.now() + remainingMs.value
     status.value = 'running'
-    stopTicker()
-    ticker = window.setInterval(tick, TICK_INTERVAL_MS)
+    startTicker()
     announcement.value = `${mode.value.label} timer started.`
   }
 
   function pause() {
     if (status.value !== 'running') return
-    remainingMs.value = Math.max(0, deadline - Date.now())
+    remainingMs.value = Math.max(0, endsAt.value - Date.now())
+    endsAt.value = 0
     stopTicker()
     status.value = 'paused'
     announcement.value = `${mode.value.label} timer paused.`
@@ -161,6 +170,7 @@ export function usePomodoro() {
 
   function reset() {
     stopTicker()
+    endsAt.value = 0
     status.value = 'idle'
     remainingMs.value = totalMs.value
     announcement.value = `${mode.value.label} timer reset.`
@@ -169,6 +179,7 @@ export function usePomodoro() {
   function selectMode(nextId) {
     if (!MODE_IDS.includes(nextId) || nextId === modeId.value) return
     stopTicker()
+    endsAt.value = 0
     modeId.value = nextId
     status.value = 'idle'
     remainingMs.value = durationMs(settings, nextId)
@@ -178,6 +189,7 @@ export function usePomodoro() {
   /** Move on without finishing the session, so it is not counted. */
   function skip() {
     stopTicker()
+    endsAt.value = 0
     const nextId = mode.value.id === 'work' ? 'short' : 'work'
     status.value = 'idle'
     modeId.value = nextId
@@ -199,6 +211,60 @@ export function usePomodoro() {
     announcement.value = 'Tracked work sessions reset to zero.'
   }
 
+  function persistState() {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          settings: { ...settings },
+          completedWorkSessions: completedWorkSessions.value,
+          modeId: modeId.value,
+          status: status.value,
+          remainingMs: remainingMs.value,
+          endsAt: endsAt.value,
+        }),
+      )
+    } catch {
+      // Storage can be unavailable (private mode, quota); the timer still works.
+    }
+  }
+
+  // Rehydrate an in-flight session so a refresh does not restart the clock.
+  function restoreTimer() {
+    if (persisted.status === 'paused') {
+      const savedRemaining = Number(persisted.remainingMs)
+      if (Number.isFinite(savedRemaining) && savedRemaining > 0) {
+        remainingMs.value = Math.min(savedRemaining, totalMs.value)
+        status.value = 'paused'
+        return
+      }
+    }
+
+    if (persisted.status !== 'running') return
+
+    const savedEndsAt = Number(persisted.endsAt)
+    if (!Number.isFinite(savedEndsAt) || savedEndsAt <= 0) return
+
+    const remaining = savedEndsAt - Date.now()
+    if (remaining > 0) {
+      endsAt.value = savedEndsAt
+      remainingMs.value = remaining
+      status.value = 'running'
+      startTicker()
+      return
+    }
+
+    // The session ran out while the page was closed, so advance past it once.
+    remainingMs.value = 0
+    finishSession({ notify: false })
+  }
+
+  restoreTimer()
+  // Write the restored snapshot back right away, otherwise an expired session
+  // would be re-applied (and counted again) on the next reload.
+  persistState()
+
   // Keep an idle timer in sync with duration changes; a running countdown is
   // left alone, and a paused countdown is trimmed if it now exceeds its mode.
   watch(totalMs, (value) => {
@@ -210,25 +276,7 @@ export function usePomodoro() {
   })
 
   // Persist the small slice of state worth restoring on reload.
-  watch(
-    [settings, completedWorkSessions, modeId],
-    () => {
-      if (typeof window === 'undefined') return
-      try {
-        window.localStorage.setItem(
-          STORAGE_KEY,
-          JSON.stringify({
-            settings: { ...settings },
-            completedWorkSessions: completedWorkSessions.value,
-            modeId: modeId.value,
-          }),
-        )
-      } catch {
-        // Storage can be unavailable (private mode, quota); the timer still works.
-      }
-    },
-    { deep: true },
-  )
+  watch([settings, completedWorkSessions, modeId, status], persistState, { deep: true })
 
   watchEffect(() => {
     if (typeof document === 'undefined') return
