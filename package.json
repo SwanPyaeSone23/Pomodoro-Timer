@@ -1,0 +1,19 @@
+{
+  "name": "pomodoro-timer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A focused Pomodoro timer built with Vue 3 and Vite.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.11"
+  }
+}
