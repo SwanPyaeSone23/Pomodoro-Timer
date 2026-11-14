@@ -179,23 +179,17 @@ export function usePomodoro() {
   function selectMode(nextId) {
     if (!MODE_IDS.includes(nextId) || nextId === modeId.value) return
 
-    // Switching session type must not silently kill a countdown: a running
-    // timer keeps running (on the new mode's duration) and a paused one stays
-    // paused instead of dropping back to idle.
-    const wasRunning = status.value === 'running'
+    // Session tabs are locked while a session runs, so pausing or resetting is
+    // what unlocks them. This guard also covers the 1/2/3 shortcuts.
+    if (status.value === 'running') return
+
     const wasPaused = status.value === 'paused'
 
     stopTicker()
     endsAt.value = 0
     modeId.value = nextId
     remainingMs.value = durationMs(settings, nextId)
-    status.value = wasRunning ? 'running' : wasPaused ? 'paused' : 'idle'
-
-    if (wasRunning) {
-      endsAt.value = Date.now() + remainingMs.value
-      startTicker()
-    }
-
+    status.value = wasPaused ? 'paused' : 'idle'
     announcement.value = `Switched to ${getMode(nextId).label}.`
   }
 

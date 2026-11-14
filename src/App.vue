@@ -136,6 +136,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleShortcut))
         <SessionTabs
           :modes="MODES"
           :model-value="modeId"
+          :locked="isRunning"
           @update:model-value="selectMode"
         />
 

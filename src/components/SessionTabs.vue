@@ -4,6 +4,9 @@ import { ref } from 'vue'
 const props = defineProps({
   modes: { type: Array, required: true },
   modelValue: { type: String, required: true },
+  // While a session runs the other tabs are unavailable, so a stray click
+  // cannot abandon the countdown.
+  locked: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -22,7 +25,14 @@ function focusTab(index) {
   tabElements.value[index]?.focus()
 }
 
+function isLocked(modeId) {
+  return props.locked && modeId !== props.modelValue
+}
+
 function onKeydown(event, index) {
+  // Arrow keys cannot reach the locked tabs either.
+  if (props.locked) return
+
   const lastIndex = props.modes.length - 1
   let nextIndex = null
 
@@ -63,6 +73,8 @@ function onKeydown(event, index) {
       :aria-selected="modelValue === mode.id"
       :aria-controls="'timer-panel'"
       :tabindex="modelValue === mode.id ? 0 : -1"
+      :disabled="isLocked(mode.id)"
+      :title="isLocked(mode.id) ? 'Pause or reset the timer to switch session type' : undefined"
       @click="select(mode.id)"
       @keydown="onKeydown($event, index)"
     >
