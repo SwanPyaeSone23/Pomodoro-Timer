@@ -1,52 +1,170 @@
 /* ---------------------------------------------------------------------------
-   Design tokens
-   --------------------------------------------------------------------------- */
+   Claymorphism design tokens
+   Two themes share the same geometry; only the tones flip.
+
+   - Soft Pastel Clay (light): milky pastel canvas with white highlights.
+   - Deep Clay (dark): twilight slate canvas with ambient blue-grey highlights.
+   Neither theme uses pure white or pure black as a surface.
+--------------------------------------------------------------------------- */
 @property --accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: #ff7a66;
+  initial-value: #ff8f7a;
 }
 
 :root {
-  color-scheme: dark;
-
-  --bg: #0b1020;
-  --surface: rgba(255, 255, 255, 0.055);
-  --surface-strong: rgba(255, 255, 255, 0.09);
-  --border: rgba(255, 255, 255, 0.1);
-  --text: #eef2ff;
-  --text-muted: #a3adc6;
-  --accent: #ff7a66;
-  --accent-soft: rgba(255, 122, 102, 0.18);
-
-  --radius-lg: 28px;
-  --radius-md: 18px;
-  --radius-sm: 12px;
-  --shadow: 0 24px 60px rgba(3, 6, 18, 0.55);
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
+  --radius-xl: 38px;
+  --radius-lg: 30px;
+  --radius-md: 22px;
+  --radius-sm: 16px;
+  --surface-transition:
+    background-color 320ms ease,
+    color 320ms ease,
+    box-shadow 320ms ease;
+}
 
-  --focus-ring: 2px solid var(--accent);
+/* ---------------------------------------------------------------------------
+   Theme 2 — Deep Clay (dark, default)
+--------------------------------------------------------------------------- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #121620;
+  --canvas-glow: rgba(46, 58, 82, 0.4);
+  --clay: #1a2130;
+  --clay-raised: #1e2739;
+  --clay-inset: #161c28;
+  --clay-track: #10151f;
+
+  /* Requested clay light/shade recipe */
+  --highlight: rgba(46, 58, 82, 0.7);
+  --depth: rgba(9, 12, 18, 0.75);
+
+  --text: #e2e8f0;
+  --text-muted: #99a6bc;
+  --text-faint: #78869e;
+  --accent-ink: #121620;
+
+  --work-accent: #ff8f7a;
+  --work-strong: #ffb3a3;
+  --work-soft: rgba(255, 143, 122, 0.26);
+
+  --short-accent: #52d3a0;
+  --short-strong: #8ce8c2;
+  --short-soft: rgba(82, 211, 160, 0.24);
+
+  --long-accent: #7fb2f0;
+  --long-strong: #b0cff8;
+  --long-soft: rgba(127, 178, 240, 0.26);
+
+  --shadow-clay:
+    20px 22px 44px -16px rgba(5, 8, 14, 0.95),
+    -12px -12px 28px rgba(46, 58, 82, 0.32),
+    inset 3px 3px 6px var(--highlight),
+    inset -5px -5px 12px rgba(9, 12, 18, 0.6);
+  --shadow-clay-sm:
+    10px 12px 24px -10px rgba(5, 8, 14, 0.9),
+    -8px -8px 18px rgba(46, 58, 82, 0.28),
+    inset 2px 2px 4px var(--highlight),
+    inset -3px -3px 8px rgba(9, 12, 18, 0.55);
+  --shadow-clay-inset:
+    inset 6px 6px 14px rgba(7, 10, 16, 0.9),
+    inset -6px -6px 14px rgba(46, 58, 82, 0.45);
+  --shadow-clay-pressed:
+    inset 10px 10px 22px rgba(7, 10, 16, 0.9),
+    inset -8px -8px 18px rgba(46, 58, 82, 0.4);
+
+  --overlay: rgba(9, 12, 18, 0.76);
+  --gloss: rgba(255, 255, 255, 0.14);
+  --focus-ring: 3px solid var(--accent-strong);
+}
+
+/* ---------------------------------------------------------------------------
+   Theme 1 — Soft Pastel Clay (light)
+--------------------------------------------------------------------------- */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --canvas: #ebf1f6;
+  --canvas-glow: rgba(255, 255, 255, 0.9);
+  --clay: #f3f7fa;
+  --clay-raised: #f7fafc;
+  --clay-inset: #e4ecf3;
+  --clay-track: #d8e3ed;
+
+  --highlight: rgba(255, 255, 255, 0.85);
+  --depth: rgba(186, 200, 213, 0.9);
+
+  --text: #1e293b;
+  --text-muted: #5b6b80;
+  --text-faint: #7b8ba0;
+  --accent-ink: #1e293b;
+
+  --work-accent: #ff9180;
+  --work-strong: #b94b33;
+  --work-soft: rgba(255, 145, 128, 0.34);
+
+  --short-accent: #5fc9a2;
+  --short-strong: #157a57;
+  --short-soft: rgba(95, 201, 162, 0.32);
+
+  --long-accent: #86b5f0;
+  --long-strong: #2a63b0;
+  --long-soft: rgba(134, 181, 240, 0.36);
+
+  --shadow-clay:
+    22px 24px 46px -18px rgba(165, 183, 201, 0.9),
+    -16px -16px 34px rgba(255, 255, 255, 0.95),
+    inset 3px 3px 6px var(--highlight),
+    inset -5px -5px 12px rgba(186, 200, 213, 0.45);
+  --shadow-clay-sm:
+    12px 14px 26px -12px rgba(165, 183, 201, 0.95),
+    -10px -10px 22px rgba(255, 255, 255, 0.95),
+    inset 2px 2px 4px var(--highlight),
+    inset -3px -3px 8px rgba(186, 200, 213, 0.4);
+  --shadow-clay-inset:
+    inset 7px 7px 16px rgba(186, 200, 213, 0.75),
+    inset -7px -7px 16px rgba(255, 255, 255, 0.95);
+  --shadow-clay-pressed:
+    inset 11px 11px 24px rgba(186, 200, 213, 0.8),
+    inset -9px -9px 20px rgba(255, 255, 255, 0.98);
+
+  --overlay: rgba(186, 200, 213, 0.55);
+  --gloss: rgba(255, 255, 255, 0.7);
+  --focus-ring: 3px solid var(--accent-strong);
+}
+
+/* Default accent before a mode is applied (dialogs live outside .app). */
+:root {
+  --accent: var(--work-accent);
+  --accent-strong: var(--work-strong);
+  --accent-soft: var(--work-soft);
 }
 
 [data-mode='work'] {
-  --accent: #ff7a66;
-  --accent-soft: rgba(255, 122, 102, 0.18);
+  --accent: var(--work-accent);
+  --accent-strong: var(--work-strong);
+  --accent-soft: var(--work-soft);
 }
 
 [data-mode='short'] {
-  --accent: #34d399;
-  --accent-soft: rgba(52, 211, 153, 0.18);
+  --accent: var(--short-accent);
+  --accent-strong: var(--short-strong);
+  --accent-soft: var(--short-soft);
 }
 
 [data-mode='long'] {
-  --accent: #60a5fa;
-  --accent-soft: rgba(96, 165, 250, 0.18);
+  --accent: var(--long-accent);
+  --accent-strong: var(--long-strong);
+  --accent-soft: var(--long-soft);
 }
 
 /* ---------------------------------------------------------------------------
    Base
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -64,12 +182,13 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--text);
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(900px 620px at 12% -12%, rgba(255, 122, 102, 0.16), transparent 60%),
-    radial-gradient(760px 520px at 92% 4%, rgba(96, 165, 250, 0.16), transparent 58%);
+  background-color: var(--canvas);
+  background-image: radial-gradient(1200px 780px at 10% -14%, var(--canvas-glow), transparent 62%);
   background-repeat: no-repeat;
-  transition: --accent 450ms ease;
+  transition:
+    background-color 320ms ease,
+    color 320ms ease,
+    --accent 450ms ease;
 }
 
 h1,
@@ -86,12 +205,12 @@ input {
 
 :focus-visible {
   outline: var(--focus-ring);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
 ::selection {
   background: var(--accent);
-  color: #10152a;
+  color: var(--accent-ink);
 }
 
 .visually-hidden {
@@ -114,11 +233,12 @@ input {
   z-index: 100;
   padding: 0.6rem 1.1rem;
   border-radius: 999px;
-  background: var(--surface-strong);
+  background: var(--clay);
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
+  box-shadow: var(--shadow-clay-sm);
   transform: translate(-50%, -200%);
   transition: transform 180ms ease;
 }
@@ -129,7 +249,7 @@ input {
 
 /* ---------------------------------------------------------------------------
    Layout shell
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 .app {
   position: relative;
   z-index: 0;
@@ -149,7 +269,8 @@ input {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(58% 46% at 50% -8%, var(--accent-soft), transparent 72%);
+  background: radial-gradient(58% 46% at 50% -12%, var(--accent-soft), transparent 72%);
+  opacity: 0.55;
   transition: background 450ms ease;
 }
 
@@ -160,22 +281,28 @@ input {
   gap: 1rem;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.9rem;
 }
 
 .brand__mark {
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 3.25rem;
+  height: 3.25rem;
   font-size: 1.45rem;
-  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--surface);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: var(--clay-raised);
+  box-shadow: var(--shadow-clay-sm);
+  transition: var(--surface-transition);
 }
 
 .brand__title {
@@ -193,13 +320,13 @@ input {
   display: grid;
   flex: 1;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-  gap: 1.25rem;
+  gap: clamp(1.1rem, 2.4vw, 1.6rem);
   align-items: start;
 }
 
 .side-column {
   display: grid;
-  gap: 1.25rem;
+  gap: clamp(1.1rem, 2.4vw, 1.6rem);
 }
 
 .app__footer {
@@ -210,26 +337,25 @@ input {
 
 /* ---------------------------------------------------------------------------
    Buttons and inputs
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 48px;
-  padding: 0.8rem 1.4rem;
-  border: 1px solid transparent;
+  min-height: 52px;
+  padding: 0.8rem 1.5rem;
+  border: 0;
   border-radius: 999px;
   font-weight: 600;
   font-size: 0.95rem;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   cursor: pointer;
   transition:
-    transform 160ms ease,
-    background-color 200ms ease,
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    color 200ms ease;
+    transform 180ms ease,
+    background-color 320ms ease,
+    box-shadow 320ms ease,
+    color 320ms ease;
 }
 
 .button svg {
@@ -239,52 +365,77 @@ input {
 }
 
 .button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .button:active {
-  transform: translateY(0) scale(0.985);
+  transform: translateY(1px);
 }
 
 .button--primary {
-  padding-inline: 2rem;
-  color: #10152a;
+  padding-inline: 2.1rem;
+  color: var(--accent-ink);
   background: var(--accent);
-  box-shadow: 0 12px 30px var(--accent-soft);
+  box-shadow:
+    12px 14px 26px -10px var(--depth),
+    -8px -8px 20px var(--highlight),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.45),
+    inset -4px -4px 9px rgba(0, 0, 0, 0.14);
 }
 
 .button--primary:hover {
-  box-shadow: 0 16px 36px var(--accent-soft);
+  box-shadow:
+    14px 18px 30px -10px var(--depth),
+    -10px -10px 24px var(--highlight),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.5),
+    inset -4px -4px 9px rgba(0, 0, 0, 0.16);
+}
+
+.button--primary:active {
+  box-shadow:
+    inset 8px 8px 16px rgba(0, 0, 0, 0.18),
+    inset -6px -6px 14px rgba(255, 255, 255, 0.35);
 }
 
 .button--ghost {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.055);
-  border-color: var(--border);
+  background: var(--clay);
+  box-shadow: var(--shadow-clay-sm);
 }
 
 .button--ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--clay-raised);
+}
+
+.button--ghost:active {
+  box-shadow: var(--shadow-clay-pressed);
 }
 
 .icon-button {
   display: inline-grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border);
+  width: 52px;
+  height: 52px;
+  border: 0;
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: var(--clay-raised);
   color: var(--text);
   cursor: pointer;
+  box-shadow: var(--shadow-clay-sm);
   transition:
-    background-color 200ms ease,
-    transform 160ms ease;
+    background-color 320ms ease,
+    box-shadow 320ms ease,
+    transform 180ms ease;
 }
 
 .icon-button:hover {
-  background: var(--surface-strong);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  background: var(--clay);
+}
+
+.icon-button:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-clay-pressed);
 }
 
 .icon-button svg {
@@ -294,18 +445,17 @@ input {
 
 /* ---------------------------------------------------------------------------
    Timer card
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 .timer-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1.25rem, 3vw, 1.75rem);
+  gap: clamp(1.25rem, 3vw, 1.85rem);
   padding: clamp(1.25rem, 3vw, 2.25rem);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
+  border-radius: var(--radius-xl);
+  background: var(--clay);
+  box-shadow: var(--shadow-clay);
+  transition: var(--surface-transition);
 }
 
 .timer-card__panel {
@@ -326,16 +476,16 @@ input {
 /* Session tabs ------------------------------------------------------------ */
 .tabs {
   display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.3rem;
-  border: 1px solid var(--border);
+  gap: 0.3rem;
+  padding: 0.4rem;
   border-radius: 999px;
-  background: rgba(8, 11, 24, 0.55);
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
 }
 
 .tabs__tab {
-  min-height: 44px;
-  padding: 0.6rem 1.15rem;
+  min-height: 46px;
+  padding: 0.6rem 1.2rem;
   border: 0;
   border-radius: 999px;
   background: transparent;
@@ -345,36 +495,41 @@ input {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color 200ms ease,
-    color 200ms ease,
-    box-shadow 200ms ease;
+    background-color 240ms ease,
+    color 240ms ease,
+    box-shadow 240ms ease,
+    transform 180ms ease;
 }
 
-.tabs__tab:hover {
+.tabs__tab:hover:not(:disabled) {
   color: var(--text);
 }
 
 .tabs__tab[aria-selected='true'] {
-  background: var(--accent-soft);
-  color: #fff;
-  box-shadow: inset 0 0 0 1px var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow:
+    8px 10px 18px -8px var(--depth),
+    -6px -6px 14px var(--highlight),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.45),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.14);
 }
 
 .tabs__tab:disabled {
-  color: var(--text-muted);
-  opacity: 0.45;
+  color: var(--text-faint);
+  opacity: 0.5;
   cursor: not-allowed;
-}
-
-.tabs__tab:disabled:hover {
-  color: var(--text-muted);
 }
 
 /* Progress ring ----------------------------------------------------------- */
 .timer-ring {
   position: relative;
-  width: clamp(240px, 58vw, 320px);
+  width: clamp(250px, 58vw, 330px);
   aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
+  transition: var(--surface-transition);
 }
 
 .timer-ring__svg {
@@ -386,7 +541,7 @@ input {
 
 .timer-ring__track {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: var(--clay-track);
   stroke-width: 4;
 }
 
@@ -395,7 +550,7 @@ input {
   stroke: var(--accent);
   stroke-width: 4;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 10px var(--accent-soft));
+  filter: drop-shadow(2px 2px 3px var(--depth));
   transition:
     stroke-dashoffset 220ms linear,
     stroke 400ms ease;
@@ -408,8 +563,8 @@ input {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 1.5rem;
+  gap: 0.4rem;
+  padding: 1.75rem;
   text-align: center;
 }
 
@@ -418,7 +573,7 @@ input {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .timer__time {
@@ -427,6 +582,9 @@ input {
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
+  text-shadow:
+    1px 2px 2px var(--highlight),
+    -1px -1px 2px var(--depth);
 }
 
 .timer__hint {
@@ -439,22 +597,21 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
 /* ---------------------------------------------------------------------------
    Stats and shortcuts
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 .stats {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.95rem;
   padding: clamp(1.25rem, 3vw, 1.75rem);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
+  background: var(--clay);
+  box-shadow: var(--shadow-clay);
+  transition: var(--surface-transition);
 }
 
 .stats__header {
@@ -466,7 +623,7 @@ input {
 
 .stats__heading,
 .shortcuts__heading {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -474,10 +631,12 @@ input {
 }
 
 .stats__badge {
-  padding: 0.2rem 0.6rem;
-  border: 1px solid var(--border);
+  padding: 0.28rem 0.7rem;
   border-radius: 999px;
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
   font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-muted);
 }
 
@@ -503,26 +662,29 @@ input {
 .cycle {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .cycle__dot {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
   transition:
-    background-color 300ms ease,
-    box-shadow 300ms ease;
+    background-color 320ms ease,
+    box-shadow 320ms ease;
 }
 
 .cycle__dot--filled {
   background: var(--accent);
-  box-shadow: 0 0 12px var(--accent-soft);
+  box-shadow:
+    3px 3px 6px var(--depth),
+    -2px -2px 5px var(--highlight),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .stats__hint {
@@ -532,16 +694,17 @@ input {
 
 .shortcuts {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.8rem;
   padding: clamp(1.25rem, 3vw, 1.75rem);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--clay);
+  box-shadow: var(--shadow-clay-sm);
+  transition: var(--surface-transition);
 }
 
 .shortcuts__list {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.6rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -562,22 +725,24 @@ input {
 kbd {
   display: inline-grid;
   place-items: center;
-  min-width: 1.65rem;
-  min-height: 1.65rem;
-  padding: 0.1rem 0.4rem;
-  border: 1px solid var(--border);
-  border-bottom-width: 2px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.06);
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9px;
+  background: var(--clay-raised);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 0.72rem;
   font-weight: 600;
+  box-shadow:
+    3px 4px 8px -2px var(--depth),
+    -3px -3px 7px var(--highlight),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.45);
 }
 
 /* ---------------------------------------------------------------------------
    Settings dialog
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 .dialog-overlay {
   position: fixed;
   inset: 0;
@@ -586,24 +751,23 @@ kbd {
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 2rem);
-  background: rgba(4, 7, 16, 0.7);
-  backdrop-filter: blur(6px);
-  animation: overlay-in 180ms ease;
+  background: var(--overlay);
+  backdrop-filter: blur(8px);
+  animation: overlay-in 200ms ease;
 }
 
 .dialog {
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
-  width: min(100%, 26rem);
+  width: min(100%, 27rem);
   max-height: min(88vh, 44rem);
-  padding: clamp(1.25rem, 4vw, 1.75rem);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: #121729;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  padding: clamp(1.25rem, 4vw, 1.85rem);
+  border-radius: var(--radius-xl);
+  background: var(--clay-raised);
+  box-shadow: var(--shadow-clay), 0 40px 80px -30px var(--depth);
   overflow-y: auto;
-  animation: dialog-in 200ms ease;
+  animation: dialog-in 220ms cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 .dialog__header {
@@ -625,8 +789,8 @@ kbd {
 }
 
 .dialog__header .icon-button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex: none;
 }
 
@@ -654,25 +818,30 @@ kbd {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.35rem;
-  padding: 0.2rem 0.85rem;
-  border: 1px solid var(--border);
+  margin-top: 0.4rem;
+  padding: 0.2rem 1rem;
   border-radius: var(--radius-sm);
-  background: rgba(8, 11, 24, 0.6);
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
+  transition:
+    box-shadow 240ms ease,
+    background-color 320ms ease;
 }
 
 .field__control:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  box-shadow:
+    var(--shadow-clay-inset),
+    0 0 0 3px var(--accent-soft);
 }
 
 .field__input {
   width: 100%;
-  min-height: 44px;
+  min-height: 46px;
   padding: 0.4rem 0;
   border: 0;
   background: transparent;
   font-size: 1rem;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -691,34 +860,37 @@ kbd {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--border);
+  padding: 0.9rem 1.1rem;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--clay);
+  box-shadow: var(--shadow-clay-sm);
 }
 
 .switch__input {
   flex: none;
-  width: 46px;
-  height: 26px;
+  width: 54px;
+  height: 30px;
   margin: 0;
   border-radius: 999px;
   appearance: none;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 0 0 1px var(--border);
+  background: var(--clay-inset);
+  box-shadow: var(--shadow-clay-inset);
   cursor: pointer;
-  transition: background-color 200ms ease;
+  transition: background-color 240ms ease;
 }
 
 .switch__input::after {
   content: '';
   display: block;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   margin: 3px;
   border-radius: 50%;
-  background: #fff;
-  transition: transform 200ms ease;
+  background: var(--clay-raised);
+  box-shadow:
+    2px 3px 6px var(--depth),
+    -1px -1px 3px var(--highlight);
+  transition: transform 240ms cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 .switch__input:checked {
@@ -726,7 +898,8 @@ kbd {
 }
 
 .switch__input:checked::after {
-  transform: translateX(20px);
+  transform: translateX(24px);
+  background: var(--clay-raised);
 }
 
 .dialog__footer {
@@ -737,8 +910,9 @@ kbd {
 }
 
 .dialog__footer .button {
-  padding-inline: 1.1rem;
+  padding-inline: 1.15rem;
   font-size: 0.88rem;
+  min-height: 48px;
 }
 
 .dialog__footer .button--primary {
@@ -757,7 +931,7 @@ kbd {
 @keyframes dialog-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(14px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -767,7 +941,7 @@ kbd {
 
 /* ---------------------------------------------------------------------------
    Responsive
-   --------------------------------------------------------------------------- */
+--------------------------------------------------------------------------- */
 @media (max-width: 900px) {
   .board {
     grid-template-columns: minmax(0, 1fr);
@@ -780,13 +954,22 @@ kbd {
 
 @media (max-width: 520px) {
   .brand__mark {
-    width: 2.65rem;
-    height: 2.65rem;
+    width: 2.8rem;
+    height: 2.8rem;
     font-size: 1.25rem;
   }
 
   .brand__subtitle {
     display: none;
+  }
+
+  .header-actions {
+    gap: 0.55rem;
+  }
+
+  .icon-button {
+    width: 48px;
+    height: 48px;
   }
 
   .tabs {
@@ -806,7 +989,7 @@ kbd {
 
   .button--ghost {
     padding-inline: 0.9rem;
-    min-width: 48px;
+    min-width: 52px;
   }
 
   .button--primary {
@@ -814,12 +997,12 @@ kbd {
   }
 
   .timer-ring {
-    width: clamp(210px, 74vw, 280px);
+    width: clamp(215px, 74vw, 285px);
   }
 
   kbd {
-    min-width: 1.5rem;
-    min-height: 1.5rem;
+    min-width: 1.55rem;
+    min-height: 1.55rem;
   }
 }
 

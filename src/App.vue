@@ -32,6 +32,50 @@ const {
 const isSettingsOpen = ref(false)
 const settingsButton = ref(null)
 
+const THEME_STORAGE_KEY = 'pomodoro-theme'
+const THEMES = ['light', 'dark']
+
+function readStoredTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY)
+    return THEMES.includes(stored) ? stored : null
+  } catch {
+    return null
+  }
+}
+
+const theme = ref(
+  readStoredTheme() ??
+    (window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark'),
+)
+const isDarkTheme = computed(() => theme.value === 'dark')
+const themeToggleLabel = computed(() =>
+  isDarkTheme.value
+    ? 'Switch to Soft Pastel Clay light theme'
+    : 'Switch to Deep Clay dark theme',
+)
+
+function toggleTheme() {
+  theme.value = isDarkTheme.value ? 'light' : 'dark'
+}
+
+// Keep the document in sync so teleported UI and the browser chrome follow.
+watch(
+  theme,
+  (value) => {
+    document.documentElement.dataset.theme = value
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', value === 'light' ? '#EBF1F6' : '#121620')
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, value)
+    } catch {
+      // Storage can be unavailable; the theme still applies for this visit.
+    }
+  },
+  { immediate: true },
+)
+
 const statusLabel = computed(() => {
   if (isRunning.value) return 'In progress'
   if (status.value === 'paused') return 'Paused — take your time'
@@ -99,15 +143,43 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleShortcut))
         </div>
       </div>
 
-      <button
-        ref="settingsButton"
-        type="button"
-        class="icon-button"
-        aria-label="Open timer settings"
-        aria-haspopup="dialog"
-        :aria-expanded="isSettingsOpen"
-        @click="isSettingsOpen = true"
-      >
+      <div class="header-actions">
+        <button
+          type="button"
+          class="icon-button"
+          :aria-label="themeToggleLabel"
+          :title="themeToggleLabel"
+          @click="toggleTheme"
+        >
+          <svg v-if="isDarkTheme" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4.2" />
+              <path
+                d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"
+              />
+            </g>
+          </svg>
+          <svg v-else viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.7 8.7 0 1 0 11.1 11.1Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+        <button
+          ref="settingsButton"
+          type="button"
+          class="icon-button"
+          aria-label="Open timer settings"
+          aria-haspopup="dialog"
+          :aria-expanded="isSettingsOpen"
+          @click="isSettingsOpen = true"
+        >
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <circle
             cx="12"
@@ -126,7 +198,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleShortcut))
             stroke-linejoin="round"
           />
         </svg>
-      </button>
+        </button>
+      </div>
     </header>
 
     <main id="main" class="board">
